@@ -7,7 +7,7 @@ const houses: House[] = [
     address: '1234 Small St.',
     city: 'Austin',
     state: 'TX',
-    zipcode: '78704',
+    zipcode: 78704,
   },
   {
     id: 1,
@@ -15,7 +15,7 @@ const houses: House[] = [
     address: '5678 Big Ln.',
     city: 'Austin',
     state: 'TX',
-    zipcode: '78729',
+    zipcode: 78729,
   },
 ];
 
