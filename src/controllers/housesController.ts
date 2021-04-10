@@ -31,6 +31,26 @@ export const addHouse = (req: Request, res: Response): Response => {
   return res.json(newHouse);
 };
 
+export const updateHouse = (req: Request, res: Response): Response => {
+  const { id } = req.params;
+  const houseIndex = houses.findIndex((house: House) => house.id === parseInt(id));
+
+  if (houseIndex < 0) {
+    res.status(404);
+
+    return res.json({ message: 'Not Found. The requested id does not exist.' });
+  }
+
+  const updatedHouse = {
+    ...houses[houseIndex],
+    ...req.body,
+  };
+
+  houses[houseIndex] = updatedHouse;
+
+  return res.json(updatedHouse);
+};
+
 export const deleteHouse = (req: Request, res: Response): Response => {
   const { id } = req.params;
   const houseIndex = houses.findIndex((house: House) => house.id === parseInt(id));
