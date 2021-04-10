@@ -5,4 +5,7 @@ export interface House {
   city: string;
   state: string;
   zipcode: number;
+  image_url: string;
+  monthly_mortgage: number;
+  monethly_rent: number;
 }

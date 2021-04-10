@@ -25,6 +25,7 @@ export const addHouse = (req: Request, res: Response): Response => {
     id: idCount,
     ...req.body,
   };
+
   houses.push(newHouse);
   idCount += 1;
 
