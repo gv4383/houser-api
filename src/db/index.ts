@@ -1,3 +1,4 @@
+import knex from 'knex';
 import { House } from '../types/houses';
 
 export const houses: House[] = [
@@ -11,7 +12,7 @@ export const houses: House[] = [
     image_url:
       'https://images.unsplash.com/photo-1563127673-00fb29e7eeae?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80',
     monthly_mortgage: 1800,
-    monethly_rent: 3600,
+    monthly_rent: 3600,
   },
   {
     id: 1,
@@ -23,6 +24,16 @@ export const houses: House[] = [
     image_url:
       'https://images.unsplash.com/photo-1613544723157-fa0acdba2cca?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1951&q=80',
     monthly_mortgage: 2323.45,
-    monethly_rent: 4321.09,
+    monthly_rent: 4321.09,
   },
 ];
+
+const db = knex({
+  client: 'postgres',
+  connection: {
+    host: 'localhost',
+    database: 'houser-api',
+  },
+});
+
+export default db;

@@ -7,5 +7,5 @@ export interface House {
   zipcode: number;
   image_url: string;
   monthly_mortgage: number;
-  monethly_rent: number;
+  monthly_rent: number;
 }
