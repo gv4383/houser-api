@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 
-import houses from '../db';
+import { houses } from '../db';
 import { House } from '../types/houses';
 
 let idCount = 2;

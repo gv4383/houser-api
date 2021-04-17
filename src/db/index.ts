@@ -1,6 +1,6 @@
 import { House } from '../types/houses';
 
-const houses: House[] = [
+export const houses: House[] = [
   {
     id: 0,
     name: 'Small House',
@@ -26,5 +26,3 @@ const houses: House[] = [
     monethly_rent: 4321.09,
   },
 ];
-
-export default houses;
