@@ -1,4 +1,3 @@
-import knex from 'knex';
 import { House } from '../types/houses';
 
 export const houses: House[] = [
@@ -27,13 +26,3 @@ export const houses: House[] = [
     monthly_rent: 4321.09,
   },
 ];
-
-const db = knex({
-  client: 'postgres',
-  connection: {
-    host: 'localhost',
-    database: 'houser-api',
-  },
-});
-
-export default db;
