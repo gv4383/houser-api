@@ -43,24 +43,24 @@ export const addHouse = async (req: Request, res: Response): Promise<void> => {
     .catch(err => res.status(500).json({ message: err.message }));
 };
 
-export const updateHouse = (req: Request, res: Response): Response => {
+export const updateHouse = async (req: Request, res: Response): Promise<void> => {
   const { id } = req.params;
-  const houseIndex = houses.findIndex((house: House) => house.id === parseInt(id));
+  const updatedHouse = { ...req.body };
 
-  if (houseIndex < 0) {
-    res.status(404);
+  await db(TABLES.HOUSES)
+    .where(COLUMNS.ID, id)
+    .update(updatedHouse, COLUMNS.ID)
+    .then((ids: number[]) => {
+      if (ids.length === 0) {
+        return res.status(404).json({ message: 'Not Found. The requested id does not exist.' });
+      }
+    })
+    .catch(err => res.status(500).json({ message: err.message }));
 
-    return res.json({ message: 'Not Found. The requested id does not exist.' });
-  }
-
-  const updatedHouse = {
-    ...houses[houseIndex],
-    ...req.body,
-  };
-
-  houses[houseIndex] = updatedHouse;
-
-  return res.json(updatedHouse);
+  await db(TABLES.HOUSES)
+    .where(COLUMNS.ID, id)
+    .then((houses: House[]) => res.json(houses[0]))
+    .catch(err => res.status(500).json({ message: err.message }));
 };
 
 export const deleteHouse = (req: Request, res: Response): void => {
