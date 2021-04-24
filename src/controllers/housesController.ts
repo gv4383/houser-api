@@ -1,10 +1,8 @@
 import { Request, Response } from 'express';
 
 import db, { houses } from '../db';
-import { TABLES } from '../db/constants';
+import { COLUMNS, TABLES } from '../db/constants';
 import { House } from '../types/houses';
-
-let idCount = 2;
 
 export const getHouses = (_: Request, res: Response): void => {
   db.select()
@@ -17,7 +15,7 @@ export const getHouse = (req: Request, res: Response): void => {
   const { id } = req.params;
 
   db(TABLES.HOUSES)
-    .where('id', id)
+    .where(COLUMNS.ID, id)
     .then((houses: House[]) => {
       if (houses.length === 0) {
         return res.status(404).json({ message: 'Not Found. The requested id does not exist.' });
@@ -28,16 +26,21 @@ export const getHouse = (req: Request, res: Response): void => {
     .catch(err => res.status(500).json({ message: err.message }));
 };
 
-export const addHouse = (req: Request, res: Response): Response => {
-  const newHouse = {
-    id: idCount,
-    ...req.body,
-  };
+export const addHouse = async (req: Request, res: Response): Promise<void> => {
+  const newHouse: House = { ...req.body };
+  let newHouseId;
 
-  houses.push(newHouse);
-  idCount += 1;
+  await db(TABLES.HOUSES)
+    .insert(newHouse, COLUMNS.ID)
+    .then((ids: number[]) => {
+      newHouseId = ids[0];
+    })
+    .catch(err => res.status(500).json({ message: err.message }));
 
-  return res.json(newHouse);
+  await db(TABLES.HOUSES)
+    .where(COLUMNS.ID, newHouseId)
+    .then((houses: House[]) => res.json(houses[0]))
+    .catch(err => res.status(500).json({ message: err.message }));
 };
 
 export const updateHouse = (req: Request, res: Response): Response => {
