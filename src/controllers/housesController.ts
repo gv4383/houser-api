@@ -1,11 +1,22 @@
 import { Request, Response } from 'express';
 
-import { houses } from '../db';
+import db, { houses } from '../db';
+import { TABLES } from '../db/constants';
 import { House } from '../types/houses';
 
 let idCount = 2;
 
-export const getHouses = (_: Request, res: Response): Response => res.json(houses);
+export const getHouses = (_: Request, res: Response): void => {
+  db.select()
+    .table(TABLES.HOUSES)
+    .then((houses: House[]) => {
+      return res.json(houses);
+    })
+    .catch(err => {
+      res.status(500);
+      res.json({ message: err.message });
+    });
+};
 
 export const getHouse = (req: Request, res: Response): Response => {
   const { id } = req.params;
