@@ -13,17 +13,19 @@ export const getHouses = (_: Request, res: Response): void => {
     .catch(err => res.status(500).json({ message: err.message }));
 };
 
-export const getHouse = (req: Request, res: Response): Response => {
+export const getHouse = (req: Request, res: Response): void => {
   const { id } = req.params;
-  const houseIndex = houses.findIndex((house: House) => house.id === parseInt(id));
 
-  if (houseIndex < 0) {
-    res.status(404);
+  db(TABLES.HOUSES)
+    .where('id', id)
+    .then((houses: House[]) => {
+      if (houses.length === 0) {
+        return res.status(404).json({ message: 'Not Found. The requested id does not exist.' });
+      }
 
-    return res.json({ message: 'Not Found. The requested id does not exist.' });
-  }
-
-  return res.json(houses[houseIndex]);
+      return res.json(houses[0]);
+    })
+    .catch(err => res.status(500).json({ message: err.message }));
 };
 
 export const addHouse = (req: Request, res: Response): Response => {
