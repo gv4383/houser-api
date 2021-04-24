@@ -1,10 +1,6 @@
 import { config } from 'dotenv';
 
-type Environment = 'development' | 'production';
-
 config();
-
-const environment = process.env.ENVIRONMENT as Environment;
 
 const knexConfig = {
   development: {
@@ -14,10 +10,10 @@ const knexConfig = {
       database: process.env.DB_DATABASE,
     },
     migrations: {
-      directory: __dirname + 'src/db/migrations',
+      directory: __dirname + '/src/db/migrations',
     },
     seeds: {
-      directory: __dirname + 'src/db/seeds',
+      directory: __dirname + '/src/db/seeds',
     },
   },
   production: {
@@ -27,14 +23,12 @@ const knexConfig = {
       database: process.env.DB_DATABASE,
     },
     migrations: {
-      directory: __dirname + 'src/db/migrations',
+      directory: __dirname + '/src/db/migrations',
     },
     seeds: {
-      directory: __dirname + 'src/db/seeds',
+      directory: __dirname + '/src/db/seeds',
     },
   },
 };
-
-export const db = knexConfig[environment];
 
 export default knexConfig;
