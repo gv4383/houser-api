@@ -9,13 +9,8 @@ let idCount = 2;
 export const getHouses = (_: Request, res: Response): void => {
   db.select()
     .table(TABLES.HOUSES)
-    .then((houses: House[]) => {
-      return res.json(houses);
-    })
-    .catch(err => {
-      res.status(500);
-      res.json({ message: err.message });
-    });
+    .then((houses: House[]) => res.json(houses))
+    .catch(err => res.status(500).json({ message: err.message }));
 };
 
 export const getHouse = (req: Request, res: Response): Response => {
