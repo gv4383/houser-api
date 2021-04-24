@@ -63,17 +63,18 @@ export const updateHouse = (req: Request, res: Response): Response => {
   return res.json(updatedHouse);
 };
 
-export const deleteHouse = (req: Request, res: Response): Response => {
+export const deleteHouse = (req: Request, res: Response): void => {
   const { id } = req.params;
-  const houseIndex = houses.findIndex((house: House) => house.id === parseInt(id));
 
-  if (houseIndex < 0) {
-    res.status(404);
+  db(TABLES.HOUSES)
+    .where(COLUMNS.ID, id)
+    .del(COLUMNS.ID)
+    .then((ids: number[]) => {
+      if (ids.length === 0) {
+        return res.status(404).json({ message: 'Not Found. The requested id does not exist.' });
+      }
 
-    return res.json({ message: 'Not Found. The requested id does not exist.' });
-  }
-
-  houses.splice(houseIndex, 1);
-
-  return res.sendStatus(204);
+      return res.sendStatus(204);
+    })
+    .catch(err => res.status(500).json({ message: err.message }));
 };
