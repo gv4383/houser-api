@@ -1,4 +1,11 @@
+import knex from 'knex';
+
 import { House } from '../types/houses';
+import knexConfig from '../../knexfile';
+
+type Environment = 'development' | 'production';
+
+const environment = process.env.ENVIRONMENT as Environment;
 
 export const houses: House[] = [
   {
@@ -26,3 +33,7 @@ export const houses: House[] = [
     monthly_rent: 4321.09,
   },
 ];
+
+const db = knex(knexConfig[environment]);
+
+export default db;
