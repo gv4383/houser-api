@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 
-import db, { houses } from '../db';
+import db from '../db';
 import { COLUMNS, TABLES } from '../db/constants';
 import { House } from '../types/houses';
 
