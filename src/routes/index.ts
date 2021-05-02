@@ -1,22 +1,16 @@
 import { Router } from 'express';
 
-import {
-  addHouse,
-  deleteHouse,
-  getHouse,
-  getHouses,
-  updateHouse,
-} from '../controllers/housesController';
+import { create, destroy, index, show, update } from '../controllers/housesController';
 import { getStatus } from '../controllers/statusController';
 
 const router = Router();
 
 router.get('/status', getStatus);
 
-router.get('/houses', getHouses);
-router.post('/houses', addHouse);
-router.get('/houses/:id', getHouse);
-router.put('/houses/:id', updateHouse);
-router.delete('/houses/:id', deleteHouse);
+router.get('/houses', index);
+router.post('/houses', create);
+router.get('/houses/:id', show);
+router.put('/houses/:id', update);
+router.delete('/houses/:id', destroy);
 
 export default router;

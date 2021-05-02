@@ -2,16 +2,16 @@ import { Request, Response } from 'express';
 
 import db from '../db';
 import { COLUMNS, TABLES } from '../db/constants';
+import { getHouses } from '../repositories/housesRepository';
 import { House } from '../types/houses';
 
-export const getHouses = (_: Request, res: Response): void => {
-  db.select()
-    .table(TABLES.HOUSES)
-    .then((houses: House[]) => res.json(houses))
-    .catch(err => res.status(500).json({ message: err.message }));
+export const index = async (_: Request, res: Response): Promise<Response> => {
+  const houses = await getHouses(res);
+
+  return res.json(houses);
 };
 
-export const getHouse = (req: Request, res: Response): void => {
+export const show = (req: Request, res: Response): void => {
   const { id } = req.params;
 
   db(TABLES.HOUSES)
@@ -26,7 +26,7 @@ export const getHouse = (req: Request, res: Response): void => {
     .catch(err => res.status(500).json({ message: err.message }));
 };
 
-export const addHouse = async (req: Request, res: Response): Promise<void> => {
+export const create = async (req: Request, res: Response): Promise<void> => {
   const newHouse: House = { ...req.body };
   let newHouseId;
 
@@ -43,7 +43,7 @@ export const addHouse = async (req: Request, res: Response): Promise<void> => {
     .catch(err => res.status(500).json({ message: err.message }));
 };
 
-export const updateHouse = async (req: Request, res: Response): Promise<void> => {
+export const update = async (req: Request, res: Response): Promise<void> => {
   const { id } = req.params;
   const updatedHouse = { ...req.body };
 
@@ -63,7 +63,7 @@ export const updateHouse = async (req: Request, res: Response): Promise<void> =>
     .catch(err => res.status(500).json({ message: err.message }));
 };
 
-export const deleteHouse = (req: Request, res: Response): void => {
+export const destroy = (req: Request, res: Response): void => {
   const { id } = req.params;
 
   db(TABLES.HOUSES)
