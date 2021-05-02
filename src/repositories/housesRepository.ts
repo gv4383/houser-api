@@ -6,9 +6,23 @@ import { House } from '../types/houses';
 
 export const getHouses = async (res: Response): Promise<House[] | Response> => {
   try {
-    const houses = await db.select().table(TABLES.HOUSES);
+    const houses: House[] = await db.select().table(TABLES.HOUSES);
 
     return houses;
+  } catch (err) {
+    return res.status(500).json({ message: err.message });
+  }
+};
+
+export const getHouse = async (id: string, res: Response): Promise<House | Response> => {
+  try {
+    const houses: House[] = await db(TABLES.HOUSES).where(COLUMNS.ID, id);
+
+    if (houses.length === 0) {
+      return res.status(404).json({ message: 'Not Found. The requested id does not exist.' });
+    }
+
+    return houses[0];
   } catch (err) {
     return res.status(500).json({ message: err.message });
   }
