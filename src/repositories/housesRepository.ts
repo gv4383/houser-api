@@ -39,3 +39,25 @@ export const addHouse = async (newHouse: House, res: Response): Promise<House | 
     return res.status(500).json({ message: err.message });
   }
 };
+
+export const updateHouse = async (
+  houseId: string,
+  updatedHouse: House,
+  res: Response,
+): Promise<House | Response> => {
+  try {
+    const houseIds: number[] = await db(TABLES.HOUSES)
+      .where(COLUMNS.ID, houseId)
+      .update(updatedHouse, COLUMNS.ID);
+
+    if (houseIds.length === 0) {
+      return res.status(404).json({ message: 'Not Found. The requested id does not exist.' });
+    }
+
+    const updatedHouses: House[] = await db(TABLES.HOUSES).where(COLUMNS.ID, houseId);
+
+    return updatedHouses[0];
+  } catch (err) {
+    return res.status(500).json({ message: err.message });
+  }
+};
