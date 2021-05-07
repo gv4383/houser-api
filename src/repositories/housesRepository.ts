@@ -27,3 +27,15 @@ export const getHouse = async (id: string, res: Response): Promise<House | Respo
     return res.status(500).json({ message: err.message });
   }
 };
+
+export const addHouse = async (newHouse: House, res: Response): Promise<House | Response> => {
+  try {
+    const newHouseIds: number[] = await db(TABLES.HOUSES).insert(newHouse, COLUMNS.ID);
+
+    const addedHouses: House[] = await db(TABLES.HOUSES).where(COLUMNS.ID, newHouseIds[0]);
+
+    return addedHouses[0];
+  } catch (err) {
+    return res.status(500).json({ message: err.message });
+  }
+};

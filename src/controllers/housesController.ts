@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 
 import db from '../db';
 import { COLUMNS, TABLES } from '../db/constants';
-import { getHouse, getHouses } from '../repositories/housesRepository';
+import { addHouse, getHouse, getHouses } from '../repositories/housesRepository';
 import { House } from '../types/houses';
 
 export const index = async (_: Request, res: Response): Promise<Response> => {
@@ -19,21 +19,11 @@ export const show = async (req: Request, res: Response): Promise<Response> => {
   return res.json(house);
 };
 
-export const create = async (req: Request, res: Response): Promise<void> => {
+export const create = async (req: Request, res: Response): Promise<Response> => {
   const newHouse: House = { ...req.body };
-  let newHouseId;
+  const addedHouse = await addHouse(newHouse, res);
 
-  await db(TABLES.HOUSES)
-    .insert(newHouse, COLUMNS.ID)
-    .then((ids: number[]) => {
-      newHouseId = ids[0];
-    })
-    .catch(err => res.status(500).json({ message: err.message }));
-
-  await db(TABLES.HOUSES)
-    .where(COLUMNS.ID, newHouseId)
-    .then((houses: House[]) => res.json(houses[0]))
-    .catch(err => res.status(500).json({ message: err.message }));
+  return res.json(addedHouse);
 };
 
 export const update = async (req: Request, res: Response): Promise<void> => {
