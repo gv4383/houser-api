@@ -61,3 +61,15 @@ export const updateHouse = async (
     return res.status(500).json({ message: err.message });
   }
 };
+
+export const deleteHouse = async (houseId: string, res: Response): Promise<void | Response> => {
+  try {
+    const houseIds: number[] = await db(TABLES.HOUSES).where(COLUMNS.ID, houseId).del(COLUMNS.ID);
+
+    if (houseIds.length === 0) {
+      return res.status(404).json({ message: 'Not Found. The requested id does not exist.' });
+    }
+  } catch (err) {
+    return res.status(500).json({ message: err.message });
+  }
+};

@@ -1,8 +1,12 @@
 import { Request, Response } from 'express';
 
-import db from '../db';
-import { COLUMNS, TABLES } from '../db/constants';
-import { addHouse, getHouse, getHouses, updateHouse } from '../repositories/housesRepository';
+import {
+  addHouse,
+  deleteHouse,
+  getHouse,
+  getHouses,
+  updateHouse,
+} from '../repositories/housesRepository';
 import { House } from '../types/houses';
 
 export const index = async (_: Request, res: Response): Promise<Response> => {
@@ -34,18 +38,10 @@ export const update = async (req: Request, res: Response): Promise<Response> => 
   return res.json(newlyUpdatedHouse);
 };
 
-export const destroy = (req: Request, res: Response): void => {
+export const destroy = async (req: Request, res: Response): Promise<Response> => {
   const { id } = req.params;
 
-  db(TABLES.HOUSES)
-    .where(COLUMNS.ID, id)
-    .del(COLUMNS.ID)
-    .then((ids: number[]) => {
-      if (ids.length === 0) {
-        return res.status(404).json({ message: 'Not Found. The requested id does not exist.' });
-      }
+  await deleteHouse(id, res);
 
-      return res.sendStatus(204);
-    })
-    .catch(err => res.status(500).json({ message: err.message }));
+  return res.sendStatus(204);
 };
