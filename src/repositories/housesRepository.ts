@@ -1,34 +1,33 @@
-import { Response } from 'express';
-
+import { ERROR_MESSAGES } from '../constants';
 import db from '../db';
 import { COLUMNS, TABLES } from '../db/constants';
 import { House } from '../types/houses';
 
-export const getHouses = async (res: Response): Promise<House[] | Response> => {
+export const getHouses = async (): Promise<House[]> => {
   try {
     const houses: House[] = await db.select().table(TABLES.HOUSES);
 
     return houses;
   } catch (err) {
-    return res.status(500).json({ message: err.message });
+    throw err;
   }
 };
 
-export const getHouse = async (id: string, res: Response): Promise<House | Response> => {
+export const getHouse = async (id: string): Promise<House> => {
   try {
     const houses: House[] = await db(TABLES.HOUSES).where(COLUMNS.ID, id);
 
     if (houses.length === 0) {
-      return res.status(404).json({ message: 'Not Found. The requested id does not exist.' });
+      throw new Error(ERROR_MESSAGES.NOT_FOUND);
     }
 
     return houses[0];
   } catch (err) {
-    return res.status(500).json({ message: err.message });
+    throw err;
   }
 };
 
-export const addHouse = async (newHouse: House, res: Response): Promise<House | Response> => {
+export const addHouse = async (newHouse: House): Promise<House> => {
   try {
     const newHouseIds: number[] = await db(TABLES.HOUSES).insert(newHouse, COLUMNS.ID);
 
@@ -36,40 +35,36 @@ export const addHouse = async (newHouse: House, res: Response): Promise<House | 
 
     return addedHouses[0];
   } catch (err) {
-    return res.status(500).json({ message: err.message });
+    throw err;
   }
 };
 
-export const updateHouse = async (
-  houseId: string,
-  updatedHouse: House,
-  res: Response,
-): Promise<House | Response> => {
+export const updateHouse = async (houseId: string, updatedHouse: House): Promise<House> => {
   try {
     const houseIds: number[] = await db(TABLES.HOUSES)
       .where(COLUMNS.ID, houseId)
       .update(updatedHouse, COLUMNS.ID);
 
     if (houseIds.length === 0) {
-      return res.status(404).json({ message: 'Not Found. The requested id does not exist.' });
+      throw new Error(ERROR_MESSAGES.NOT_FOUND);
     }
 
     const updatedHouses: House[] = await db(TABLES.HOUSES).where(COLUMNS.ID, houseId);
 
     return updatedHouses[0];
   } catch (err) {
-    return res.status(500).json({ message: err.message });
+    throw err;
   }
 };
 
-export const deleteHouse = async (houseId: string, res: Response): Promise<void | Response> => {
+export const deleteHouse = async (houseId: string): Promise<void> => {
   try {
     const houseIds: number[] = await db(TABLES.HOUSES).where(COLUMNS.ID, houseId).del(COLUMNS.ID);
 
     if (houseIds.length === 0) {
-      return res.status(404).json({ message: 'Not Found. The requested id does not exist.' });
+      throw new Error(ERROR_MESSAGES.NOT_FOUND);
     }
   } catch (err) {
-    return res.status(500).json({ message: err.message });
+    throw err;
   }
 };
